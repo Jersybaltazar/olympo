@@ -1,0 +1,25 @@
+{
+  "development": {
+    "username": "root",
+    "password": "",
+    "database": "olympo",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+
+  "test": {
+    "username": "",
+    "password": null,
+    "database": "olympo",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  
+  "production": {
+    "username": "",
+    "password": null,
+    "database": "olympo",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
