@@ -1,4 +1,4 @@
-const {DataTypes}  = require('mysql2');
+const { DataTypes }  = require('sequelize');
 const sequelize  = require('../config/sequelize');
 
 const CodeQR = sequelize.define('codeqr',{
@@ -8,11 +8,13 @@ const CodeQR = sequelize.define('codeqr',{
         autoIncrement: true,
     },
     code:{
-        type:DataTypes.STRING(100),
+        type: DataTypes.STRING(100),
         allowNull:false,
     },
-   
+    
 
+},{
+    freezeTableName: true,
 });
 
 CodeQR.sync()

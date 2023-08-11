@@ -1,9 +1,9 @@
-const {DataTypes} = require('mysql2');
-const sequelize  = require('../config/sequelize'); //Asegurate de importar el correcto archivo
+const {DataTypes} = require('sequelize');
+const sequelize  = require('../config/sequelize'); 
 const CodeQR = require('./codeqr');
 
 
-const accesorie = sequelize.define('accesories',{
+const Accesorie = sequelize.define('accesorie',{
     id_accesorie:{
         type: DataTypes.INTEGER,
         primaryKey:true,
@@ -49,14 +49,16 @@ const accesorie = sequelize.define('accesories',{
         type: DataTypes.INTEGER,
         allowNull: false,
         references:{
-            model:'CodeQR',
-            key:'id_qr'
-        }
+            model:'codeqr',
+            key:'id_qr',
+        },
     },
+},{
+    freezeTableName:true,
 });
 //sincronizar al modelo de la base de datos(crear la tabla si no existe)
 
-accesorie.sync()
+Accesorie.sync()
     .then(()=>{
         console.log('Modelo de datos "accesories" sincronizado correctamente.');
 
@@ -65,4 +67,4 @@ accesorie.sync()
         console.log('Error al sincronizar el modeloe de datos "accesories"', err);
     });
     
-    module.exports  = accesorie;
+    module.exports  = Accesorie;
