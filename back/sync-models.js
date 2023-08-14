@@ -8,7 +8,10 @@ const User = require('./models/users')
 
 async function syncModels() {
   try {
-    await sequelize.sync();
+    await CodeQR.sync();
+    await accesorie.sync();
+    await Permission.sync();
+    await User.sync();
     console.log('Modelos sincronizados correctamente.');
   } catch (error) {
     console.error('Error al sincronizar modelos:', error);

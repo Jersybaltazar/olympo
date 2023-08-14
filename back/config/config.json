@@ -12,7 +12,7 @@
     "password": null,
     "database": "olympo",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": ""
   },
   
   "production": {
@@ -20,6 +20,6 @@
     "password": null,
     "database": "olympo",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": ""
   }
 }

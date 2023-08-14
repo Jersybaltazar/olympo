@@ -1,4 +1,4 @@
-const {DataTypes} = require('mysql2');
+const {DataTypes} = require('sequelize');
 const sequelize  = require('../config/sequelize'); //Asegurate de importar el correcto archivo
 const CodeQR = require('./codeqr');
 
@@ -49,7 +49,7 @@ const accesorie = sequelize.define('accesories',{
         type: DataTypes.INTEGER,
         allowNull: false,
         references:{
-            model:'CodeQR',
+            model:'codeqr',
             key:'id_qr'
         }
     },

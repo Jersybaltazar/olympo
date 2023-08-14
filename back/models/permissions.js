@@ -1,10 +1,10 @@
-const {DataTypes} = require('mysql2');
+const { DataTypes } = require('sequelize');
 const sequelize  = require('../config/sequelize');
 
 const Permission = sequelize.define('permissions',{
     id_permission:{
-        tyoe:DataTypes.INTEGER,
-        primarykey: true,
+        type:DataTypes.INTEGER,
+        primaryKey: true,
         autoIncrement:true,
     },
     name:{

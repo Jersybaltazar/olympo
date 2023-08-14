@@ -1,13 +1,13 @@
-const {DataTypes} = require('mysql2');
+const {DataTypes} = require('sequelize');
 const sequelize  = require('../config/sequelize');
 const Permission = require('./permissions');
 
 const User = sequelize.define('users',{
 
     id_users:{ 
-    types: DataTypes.INTEGER,
-    primaryKey:true,
-    autoIncrement:true,
+        type: DataTypes.INTEGER,
+        primaryKey:true,
+        autoIncrement:true,
     },
     name:{
         type:DataTypes.STRING(200),
