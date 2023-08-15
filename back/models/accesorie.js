@@ -1,9 +1,5 @@
 const {DataTypes} = require('sequelize');
-<<<<<<< HEAD
-const sequelize  = require('../config/sequelize'); //Asegurate de importar el correcto archivo
-=======
 const sequelize  = require('../config/sequelize'); 
->>>>>>> origin/main
 const CodeQR = require('./codeqr');
 
 
@@ -54,16 +50,12 @@ const Accesorie = sequelize.define('accesorie',{
         allowNull: false,
         references:{
             model:'codeqr',
-<<<<<<< HEAD
-            key:'id_qr'
-        }
-=======
             key:'id_qr',
         },
->>>>>>> origin/main
     },
 },{
     freezeTableName:true,
+    timestamps: false,
 });
 //sincronizar al modelo de la base de datos(crear la tabla si no existe)
 

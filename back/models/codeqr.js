@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-const {DataTypes}  = require('sequelize');
-=======
 const { DataTypes }  = require('sequelize');
->>>>>>> origin/main
 const sequelize  = require('../config/sequelize');
 
 const CodeQR = sequelize.define('codeqr',{
@@ -19,6 +15,7 @@ const CodeQR = sequelize.define('codeqr',{
 
 },{
     freezeTableName: true,
+    timestamps: false,
 });
 
 CodeQR.sync()

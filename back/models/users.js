@@ -26,8 +26,20 @@ const User = sequelize.define('user',{
             key: 'id_permission',
         },  
     },
+    email:{
+        type : DataTypes.TEXT(),
+        unique: true,
+        allowNull: false,
+    },
+    password:{
+        type:DataTypes.CHAR(64),
+        allowNull: false,
+        
+    }
+
 },{
     freezeTableName:true,
+    timestamps: false,
 });
 User.sync()
     .then(()=>{

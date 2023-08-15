@@ -9,16 +9,10 @@ const User = require('./models/users')
 async function syncModels() {
   try {
     await CodeQR.sync();
-<<<<<<< HEAD
-    await accesorie.sync();
-    await Permission.sync();
-    await User.sync();
-=======
     await Permission.sync();
     await Accesorie.sync();
     await User.sync();
     
->>>>>>> origin/main
     console.log('Modelos sincronizados correctamente.');
   } catch (error) {
     console.error('Error al sincronizar modelos:', error);

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-const { DataTypes } = require('sequelize');
-=======
 const {DataTypes} = require('sequelize');
->>>>>>> origin/main
 const sequelize  = require('../config/sequelize');
 
 const Permission = sequelize.define('permission',{
@@ -19,6 +15,7 @@ const Permission = sequelize.define('permission',{
 
 },{
     freezeTableName:true,
+    timestamps: false,
 });
 
 Permission.sync()
