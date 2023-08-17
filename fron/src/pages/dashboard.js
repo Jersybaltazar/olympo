@@ -1,7 +1,7 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, Container, Grid, IconButton } from '@mui/material';
 import { Link } from 'react-router-dom';
-import DashboardIcon from '@mui/icons-material/Dashboard';
+// import DashboardIcon from '@mui/icons-material/Dashboard';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AccessoryIcon from '@mui/icons-material/Extension';
 import UserIcon from '@mui/icons-material/AccountBox';
@@ -11,14 +11,21 @@ const Dashboard = () => {
     <div>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Logo
+          <Typography variant="h4" sx={{ flexGrow: 1 }}color="black">
+            Olympo
           </Typography>
-          <IconButton color="inherit" component={Link} to="/profile">
+          <IconButton color="inherit" component={Link} to="/accessory">
+            <AccessoryIcon />
+          </IconButton>
+          <IconButton color="inherit" component={Link} to="/user">
+            <UserIcon />
+          </IconButton>
+          <IconButton color="iherit" component={Link} to="/profile">
             <AccountCircleIcon />
           </IconButton>
-        </Toolbar>
+        </Toolbar>      
       </AppBar>
+      
       <Container>
         <Grid container spacing={3}>
           <Grid item xs={6}>
@@ -32,13 +39,8 @@ const Dashboard = () => {
         </Grid>
       </Container>
       <AppBar position="fixed" sx={{ top: 'auto', bottom: 0 }}>
-        <Toolbar>
-          <IconButton color="inherit" component={Link} to="/accessory">
-            <AccessoryIcon />
-          </IconButton>
-          <IconButton color="inherit" component={Link} to="/user">
-            <UserIcon />
-          </IconButton>
+        <Toolbar >
+          {/* esto es para hacer una barra celeste */}
         </Toolbar>
       </AppBar>
     </div>

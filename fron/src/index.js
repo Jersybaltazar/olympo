@@ -1,6 +1,8 @@
-import React from 'react';
-import  ReactDOM  from 'react-dom';
+import React from "react";
+import { createRoot } from "react-dom/client"; // Importar createRoot correctamente
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
 
-import App from './App.jsx';
+createRoot(document.getElementById("root")).render(<App />);
 
-ReactDOM.render(<App/>, document.getElementById('root'));
+reportWebVitals();
