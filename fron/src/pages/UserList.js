@@ -8,7 +8,7 @@ import {
   Grid,
 } from "@mui/material";
 import { Search as SearchIcon, Add as AddIcon } from "@mui/icons-material";
-import AccessoryCard from "../components/AccesoryCard"; // Crearemos este componente a continuación
+// import AccessoryCard from "../components/AccesoryCard"; // Crearemos este componente a continuación
 import { Link } from "react-router-dom";
 import { styled } from "@mui/system";
 
@@ -19,7 +19,7 @@ const RightAlignedContainer = styled(Container)({
   marginTop: "30px",
 });
 
-const AccessoryList = () => {
+const UserList = () => {
   const [showSearchField, setShowSearchField]= useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1); // Página actual
@@ -42,11 +42,11 @@ const AccessoryList = () => {
     };
   }, []);
   // Simulando la lista de accesorios desde la base de datos
-  const accessoryList = [
+  const UserList = [
     // ...tu lista de accesorios
   ];
 
-  const filteredAccessories = accessoryList.filter((accessory) =>
+  const filteredAccessories = UserList.filter((accessory) =>
     accessory.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -71,7 +71,7 @@ const AccessoryList = () => {
       <RightAlignedContainer>
         <Button
           onClick={() => {
-            alert("creando accesorio  ");
+            alert("Creando Usuario ");
           }}
           variant="outlined"
           component={Link}
@@ -79,7 +79,7 @@ const AccessoryList = () => {
           color="secondary"
           disableElevation
         >
-          Crear accesorio
+          Crear usuario
         </Button>
        
       </RightAlignedContainer>
@@ -89,7 +89,7 @@ const AccessoryList = () => {
           <Grid item xs={6}>
 
 
-            <Typography variant="h6">Lista de Accesorios</Typography>
+            <Typography variant="h6">Lista de Usuarios</Typography>
           </Grid>
           <Grid item xs={1} container justifyContent="flex-end">
             {showSearchField ?(
@@ -98,7 +98,7 @@ const AccessoryList = () => {
                   value={searchTerm}
                   onChange={(event)=>setSearchTerm(event.target.value)}
                   variant="outlined"
-                  placeholder="Buscar accesorio"
+                  placeholder="Buscar U"
                 />
                 </div>
             ):(
@@ -112,9 +112,7 @@ const AccessoryList = () => {
        
       </div>
       
-      {displayedAccessories.map((accessory) => (
-        <AccessoryCard key={accessory.id} accessory={accessory} />
-      ))}
+     
       <div>
         {Array.from({ length: totalPages }).map((_, index) => (
           <Button key={index} onClick={() => handlePageChange(index + 1)}>
@@ -126,4 +124,4 @@ const AccessoryList = () => {
   );
 };
 
-export default AccessoryList;
+export default UserList;

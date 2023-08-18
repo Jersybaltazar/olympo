@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Middlewares
 app.use(cors());
@@ -15,7 +15,7 @@ const codeQRRoutes = require('./routes/qrRoutes');
 const permissionRoutes = require('./routes/permissionRoutes');
 
 app.use('/users', userRoutes);
-// app.use('/accesories', accesorieRoutes);
+app.use('/accesories', accesorieRoutes);
 // app.use('/codeqr', codeQRRoutes);
  app.use('/permissions', permissionRoutes);
 
