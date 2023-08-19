@@ -5,7 +5,7 @@ const router = express.Router();
 const accesorieController = require('./controllers/accesorioController')
 
 
-router.post('/', accesorieController.createAccesorie);
+router.post('/', accesorieController.createAccessoryWithQRCode);
 
 
 

@@ -13,6 +13,7 @@ import {
 } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import QRCode from 'qrcode';
 // import '@mui/x-date-pickers/dist/DatePicker.css';
 
 const CreateAccessory = () => {
@@ -21,11 +22,8 @@ const CreateAccessory = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [qrSize, setQrSize] = useState('100');
-
-  const handleGenerateQR = () => {
-    // Lógica para generar el QR y actualizar el estado del logo
-    // ...
-  };
+  const [qrValue, setQrValue] = useState('');
+  const [maintenanceInterval, setMaintenanceInterval] = useState(1);
 
   const handleCreateAccessory = () => {
     // Lógica para crear el accesorio en la base de datos
@@ -53,6 +51,37 @@ const CreateAccessory = () => {
       reader.readAsDataURL(file);
     }
   };
+  const handleGenerateQR = async () => {
+    try {
+      const qrValue = 'Valor basado en la información del formulario';
+                              
+
+      const canvas = await QRCode.toCanvas(qrValue, { width: parseInt(qrSize), height: parseInt(qrSize) });
+      const qrDataURL = canvas.toDataURL('image/png');
+
+      setLogoImage(qrDataURL);
+
+      const response = await fetch('http://localhost:3001/accesories/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          qrValue,
+          // Otras propiedades del formulario
+        }),
+      });
+  
+      if (response.ok) {
+        // Accesorio creado exitosamente
+      } else {
+        console.error('Error creando el accesorio');
+      }
+    } catch (error) {
+      console.error('Error generando el código QR', error);
+    }
+  };
+
   //renderizamiento del formulario los label e inputs
   const renderTextField = (label, id) => (
     <Grid container spacing={1} style={{ alignItems: 'center' }}>
@@ -89,7 +118,7 @@ const CreateAccessory = () => {
       {id !== 'codeqr' && (
         <Grid item xs={8}>
           <FormControl fullWidth margin="normal">
-            {id === 'fecha-trabajo' ? (
+            {id === 'fechatrabajo' ? (
               <DatePicker
                 label="Escoja una fecha"
                 sx={{
@@ -124,7 +153,7 @@ const CreateAccessory = () => {
       <Grid item xs={4}>
         <Typography variant="body1">{label}</Typography>
       </Grid>
-      <Grid item xs={8}>
+      <Grid item xs={8}>  
         <FormControl fullWidth margin="normal">
           <input
             accept="image/*"
@@ -159,7 +188,7 @@ const CreateAccessory = () => {
             {logo ? (
               <img src={logo} alt="QR Code" style={{ width: '100%', height: 'auto' }} />
             ) : (
-              <Typography variant="h5" align='center'>olympo</Typography>
+              <Typography variant="h5" align='center'>oly</Typography>
             )}
           </Grid>
 
@@ -170,10 +199,10 @@ const CreateAccessory = () => {
               {renderTextField('Nombre:', 'nombre')}
               {renderTextField('Marca:', 'marca')}
               {renderTextField('Modelo:', 'modelo')}
-              {renderTextField('Fecha Trabajo:', 'fecha-trabajo')}
+              {renderTextField('Fecha Trabajo:', 'fechatrabajo')}
               {renderTextField('Precio:', 'precio')}
               {renderTextField('Piezas:', 'piezas')}
-              {renderTextField('Modo de uso:', 'modo-uso')}
+              {renderTextField('Modo de uso:', 'modouso')}
               {renderImageField('Imagen:', 'imagen')}
               {renderTextField('Mantenimiento:', 'mantenimiento')}
               {renderTextField('Codeqr:', 'codeqr')}

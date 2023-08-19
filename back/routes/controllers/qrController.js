@@ -8,24 +8,24 @@ exports.generateAndAssignQRCode = async (req, res) => {
         const { accessoryId } = req.params;
 
         // Buscar el accesorio por su ID
-        const accessory = await Accessory.findByPk(accessoryId);
+        const accessory = await Accesorie.findByPk(accessoryId);
         if (!accessory) {
             return res.status(404).json({ error: 'Accesorio no encontrado.' });
         }
 
         // Generar el código QR con información del accesorio
         const qrData = {
-            accessoryId: accessory.id,
+            accessoryId: accessory.id_accesorie,
             accessoryName: accessory.name,
             // Otras propiedades relevantes del accesorio
         };
         const qrCodeImage = await qr.toDataURL(JSON.stringify(qrData));
 
         // Guardar el código QR en la base de datos
-        const newQRCode = await QRCode.create({ data: qrData, image: qrCodeImage });
+        const newQRCode = await QRCode.create({ code: qrCodeImage });
 
         // Asignar el código QR al accesorio
-        accessory.QRCodeId = newQRCode.id;
+        accessory.code_QR  = newQRCode.id_qr;
         await accessory.save();
 
         res.status(201).json(newQRCode);

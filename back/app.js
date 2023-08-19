@@ -17,7 +17,7 @@ const permissionRoutes = require('./routes/permissionRoutes');
 app.use('/users', userRoutes);
 app.use('/accesories', accesorieRoutes);
 // app.use('/codeqr', codeQRRoutes);
- app.use('/permissions', permissionRoutes);
+app.use('/permissions', permissionRoutes);
 
 // Error Handling Middleware
 app.use((error, req, res, next) => {

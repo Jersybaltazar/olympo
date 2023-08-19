@@ -44,7 +44,7 @@ export default function SignUp() {
     const formData = new FormData(event.currentTarget);
     try {
         const response = await axios.post('http://localhost:3001/users',{
-            firstName: formData.get('name'),
+            name: formData.get('firstName'),
             lastName: formData.get('lastName'),
             email: formData.get('email'),
             password: formData.get('password'),

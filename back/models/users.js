@@ -3,7 +3,6 @@ const sequelize  = require('../config/sequelize');
 const Permission = require('./permissions');
 
 const User = sequelize.define('user',{
-
     id_users:{ 
         type: DataTypes.INTEGER,
         primaryKey:true,
@@ -20,22 +19,25 @@ const User = sequelize.define('user',{
     },
     permission:{
         type:DataTypes.INTEGER,
-        allowNull: false,
+        defaultValue: 1,
         references:{
             model:'permission',
             key: 'id_permission',
         },  
     },
     email:{
-        type : DataTypes.TEXT(),
+        type : DataTypes.TEXT,
         unique: true,
         allowNull: false,
+        validate:{
+            len:[1,250]
+        }
     },
     password:{
         type:DataTypes.CHAR(64),
         allowNull: false,
         
-    }
+     }
 
 },{
     freezeTableName:true,
@@ -43,10 +45,11 @@ const User = sequelize.define('user',{
 });
 User.sync()
     .then(()=>{
-        console.log('Modelo de datos "users" sincronizado correctamente.');
+        console.log('Modelo de datos "user" sincronizado correctamente.');
+        
     })
     .catch((err)=>{
-        console.error('Error al sincronizar el modelo de datos "users":', err);
+        console.error('Error al sincronizar el modelo de datos "user":', err);
     }); 
 
  module.exports = User;

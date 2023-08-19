@@ -1,19 +1,22 @@
 'use strict';
 
-const { DataTypes } = require('../config/sequelize');
+// const { DataTypes } = require('../config/sequelize');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, Sequelize)=>{
     await queryInterface.addColumn('user','email',{
-      type:Sequelize.STRING(100),
+      type:Sequelize.DataTypes.TEXT,
       allowNull: false,
-      unique:true
+
+      validate:{
+        len:[1,250]
+    }
     }),
   
 
   await queryInterface.addColumn('user','password',{
-      type: Sequelize.CHAR(64),
+      type:Sequelize.DataTypes.CHAR(64),
       allowNull: false
   }); 
 },

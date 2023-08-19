@@ -3,14 +3,18 @@ const User = require('../../models/users'); // Asegúrate de importar correctame
 // Crear un nuevo usuario
 exports.createUser = async (req, res) => {
     try {
-        const newUser = await User.create(req.body);
+        const newUser = await User.create({
+            name: req.body.name,
+            lastName: req.body.lastName,
+            email: req.body.email,
+            password: req.body.password,
+        });
         res.status(201).json(newUser);
     } catch (error) {
         console.error(error);
         res.status(400).json({ error: 'Error al crear el usuario.', details: error.message });
     }
 };
-
 
 // Actualizar un usuario existente por su ID
 exports.updateUser = async (req, res) => {
