@@ -38,7 +38,7 @@ const Accesorie = sequelize.define('accesorie',{
         allowNull: false,
       },
     img: {
-        type: DataTypes.STRING(200),
+        type: DataTypes.BLOB,
         allowNull: false,
       },
     purchase_date: {
@@ -46,7 +46,7 @@ const Accesorie = sequelize.define('accesorie',{
         allowNull: false,
     },
     code_QR: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.INTEGER, 
         allowNull: false,
         references:{
             model:'codeqr',

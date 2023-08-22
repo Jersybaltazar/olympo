@@ -8,7 +8,7 @@ const CodeQR = sequelize.define('codeqr',{
         autoIncrement: true,
     },
     code:{
-        type: DataTypes.STRING(100),
+        type: DataTypes.TEXT,
         allowNull:false,
     },
     

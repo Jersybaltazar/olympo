@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Container,
   Typography,
@@ -9,158 +9,270 @@ import {
   InputLabel,
   Input,
   Select,
-  MenuItem
-} from '@mui/material';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import QRCode from 'qrcode';
+  MenuItem,
+} from "@mui/material";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import QRCode from "qrcode";
 // import '@mui/x-date-pickers/dist/DatePicker.css';
 
 const CreateAccessory = () => {
-
   const [logo, setLogoImage] = useState(null); // Aquí podrías manejar la imagen del logo o QR
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [qrSize, setQrSize] = useState('100');
-  const [qrValue, setQrValue] = useState('');
-  const [maintenanceInterval, setMaintenanceInterval] = useState(1);
+  const [qrSize, setQrSize] = useState("100");
+  const [selectedMaintenance, setSelectedMaintenance] = useState(1);
+  const [name, setName] = useState("");
+  const [brand, setBrand] = useState("");
+  const [model, setModel] = useState("");
+  const [price, setPrice] = useState("");
+  const [parts, setParts] = useState("");
+  const [induction, setInduction] = useState("");
+  const [mantenimiento, setmantenimiento] = useState("");
+  const [img, setImg] = useState("");
+  const [purchase_date, setPurchase_date] = useState("");
+  const [code_QR, setCode_QR] = useState("");
+  const [createdQrId, setCreatedQrId] = useState(null);
 
-  const handleCreateAccessory = () => {
-    // Lógica para crear el accesorio en la base de datos
-    // ...
+  const handleNameChange = (event) => {
+    setName(event.target.value);
   };
 
+  const handleBrandChange = (event) => {
+    setBrand(event.target.value);
+  };
+
+  const handleModelChange = (event) => {
+    setModel(event.target.value);
+  };
+
+  const handlePriceChange = (event) => {
+    setPrice(event.target.value);
+  };
+
+  const handlePartsChange = (event) => {
+    setParts(event.target.value);
+  };
   const handleQrSizeChange = (event) => {
     setQrSize(event.target.value);
   };
-
+  const handleInductionChange = (event) => {
+    setInduction(event.target.value);
+  };
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
   };
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-
     if (file) {
       const reader = new FileReader();
-
       reader.onload = (e) => {
         setSelectedImage(e.target.result);
       };
-
       reader.readAsDataURL(file);
     }
   };
+
+  function generateUniqueValue() {
+    const timestamps = new Date().getTime();
+    const randomValue = Math.floor(Math.random() * 10000);
+    const uniqueValue = `${timestamps}-${randomValue}`;
+    return uniqueValue;
+  }
+
   const handleGenerateQR = async () => {
     try {
-      const qrValue = 'Valor basado en la información del formulario';
-                              
+      // Genera el código encriptado aquí (debe ser una cadena única generada por el código QR)
+      const uniqueValue = generateUniqueValue(); // Cambia esto con el código encriptado real
 
-      const canvas = await QRCode.toCanvas(qrValue, { width: parseInt(qrSize), height: parseInt(qrSize) });
-      const qrDataURL = canvas.toDataURL('image/png');
+      const canvas = await QRCode.toCanvas(uniqueValue, {
+        width: parseInt(qrSize),
+        height: parseInt(qrSize),
+      });
+      const qrDataURL = canvas.toDataURL("image/png");
 
       setLogoImage(qrDataURL);
+      setCode_QR(uniqueValue);
 
-      const response = await fetch('http://localhost:3001/accesories/', {
-        method: 'POST',
+      const response = await fetch("http://localhost:3001/codeqr/save", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          qrValue,
-          // Otras propiedades del formulario
+          code: qrDataURL,
         }),
       });
-  
+
       if (response.ok) {
-        // Accesorio creado exitosamente
+        const responseData = await response.json();
+        const createdQrId = responseData.id_qr;
+        setCreatedQrId(createdQrId);
       } else {
-        console.error('Error creando el accesorio');
+        console.error("Error guardando el código QR en el backend");
       }
     } catch (error) {
-      console.error('Error generando el código QR', error);
+      console.error("Error generando el código QR", error);
     }
   };
 
+  const handleCreateAccessory = async () => {
+    try {
+      const imageBase64 = selectedImage.split(",")[1];
+
+      console.log("Values to be sent:", {
+        name,
+        brand,
+        model,
+        price,
+        parts,
+        induction,
+        selectedMaintenance,
+        imageBase64,
+        purchase_date: selectedDate,
+        createdQrId,
+      });
+
+      const response = await fetch("http://localhost:3001/accesories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          brand,
+          model,
+          price,
+          parts,
+          induction,
+          mantenimiento: selectedMaintenance, // Debes usar el valor seleccionado en tu estado
+          img,
+          imageBase64, // Debes usar la imagen seleccionada en tu estado
+          purchase_date: selectedDate, // Debes usar la fecha seleccionada en tu estado
+          createdQrId, // Debes usar el valor del código QR en tu estado
+        }),
+      });
+
+      if (response.ok) {
+        // Accesorio creado exitosamente en el backend
+      } else {
+        console.error("Error al crear el accesorio en el backend");
+      }
+    } catch (error) {
+      console.error("Error al crear el accesorio", error);
+    }
+  };
   //renderizamiento del formulario los label e inputs
-  const renderTextField = (label, id) => (
-    <Grid container spacing={1} style={{ alignItems: 'center' }}>
+  const renderTextField = (label, id, handleChange) => (
+    <Grid container spacing={1} style={{ alignItems: "center" }}>
       <Grid item xs={4}>
         <Typography variant="body1">{label}</Typography>
       </Grid>
 
-      {id === 'codeqr' && (
+      {id === "codeqr" && (
         <Grid item xs={8} container spacing={1} alignItems="center">
           <Grid item>
-            <FormControl fullWidth >
-              <InputLabel >  </InputLabel>
+            <FormControl fullWidth>
+              <InputLabel> </InputLabel>
               <Select
                 value={qrSize}
                 onChange={handleQrSizeChange}
-                style={{ width: '100%' }}
+                style={{ width: "100%" }}
               >
                 <MenuItem value="100">Pequeño</MenuItem>
                 <MenuItem value="200">Mediano</MenuItem>
                 <MenuItem value="300">Grande</MenuItem>
-
               </Select>
             </FormControl>
           </Grid>
           <Grid item>
-          <Button variant="outlined" onClick={handleGenerateQR}>
-            Generar QR
-          </Button>
+            <Button variant="outlined" onClick={handleGenerateQR}>
+              Generar QR
+            </Button>
+          </Grid>
         </Grid>
-      </Grid>
-
-
       )}
-      {id !== 'codeqr' && (
+
+      {id !== "codeqr" && id !== "mantenimiento" && (
         <Grid item xs={8}>
           <FormControl fullWidth margin="normal">
-            {id === 'fechatrabajo' ? (
+            {id === "fechatrabajo" ? (
               <DatePicker
                 label="Escoja una fecha"
                 sx={{
-
-                  width: '40%',
-                  height: '80%'
+                  width: "40%",
+                  height: "80%",
                 }}
                 value={selectedDate}
-                onChange={(handleDateChange)}
+                onChange={handleDateChange}
                 renderInput={(params) => <TextField {...params} />}
               />
             ) : (
-
-              <Input id={id} sx={{
-
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                padding: '8px',
-                width: '80%',
-                height: '40px'
-              }}
+              <Input
+                id={id}
+                value={
+                  id === "nombre"
+                    ? name
+                    : id === "marca"
+                    ? brand
+                    : id === "modelo"
+                    ? model
+                    : id === "precio"
+                    ? price
+                    : id === "modouso"
+                    ? induction
+                    : parts
+                }
+                onChange={handleChange}
+                sx={{
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  padding: "8px",
+                  width: "80%",
+                  height: "40px",
+                }}
               />
             )}
+          </FormControl>
+        </Grid>
+      )}
+      {id === "mantenimiento" && (
+        <Grid item xs={8}>
+          <FormControl fullWidth margin="normal">
+            <InputLabel>Mantenimiento (días)</InputLabel>
+            <Select
+              value={selectedMaintenance}
+              onChange={(event) => setSelectedMaintenance(event.target.value)}
+              style={{ width: "80%", height: "40px" }}
+            >
+              {Array.from({ length: 100 }, (_, index) => index + 1).map(
+                (number) => (
+                  <MenuItem key={number} value={number}>
+                    {number}
+                  </MenuItem>
+                )
+              )}
+            </Select>
           </FormControl>
         </Grid>
       )}
     </Grid>
   );
 
-  const renderImageField = (label, id) => (
-    <Grid container spacing={1} style={{ alignItems: 'center' }}>
+  const renderImageField = (label, id, handleChange) => (
+    <Grid container spacing={1} style={{ alignItems: "center" }}>
       <Grid item xs={4}>
         <Typography variant="body1">{label}</Typography>
       </Grid>
-      <Grid item xs={8}>  
+      <Grid item xs={8}>
         <FormControl fullWidth margin="normal">
           <input
             accept="image/*"
             id={id}
             type="file"
             onChange={handleImageChange} // Asegúrate de definir esta función
-            style={{ display: 'none' }}
+            style={{ display: "none" }}
           />
           <label htmlFor={id}>
             <Button variant="outlined" component="span">
@@ -169,7 +281,11 @@ const CreateAccessory = () => {
           </label>
           {selectedImage && (
             <div>
-              <img src={selectedImage} alt="Preview" style={{ maxWidth: '100%', marginTop: '10px' }} />
+              <img
+                src={selectedImage}
+                alt="Preview"
+                style={{ maxWidth: "100%", marginTop: "10px" }}
+              />
             </div>
           )}
         </FormControl>
@@ -177,43 +293,84 @@ const CreateAccessory = () => {
     </Grid>
   );
 
-
-
   return (
-    <Container style={{ marginTop: '100px' }}>
+    <Container style={{ marginTop: "100px" }}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Grid container spacing={4}>
-          <Grid item xs={4} style={{ backgroundColor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Grid
+            item
+            xs={4}
+            style={{
+              backgroundColor: "#f0f0f0",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             {/* Aquí podrías mostrar el logo o QR generado */}
             {logo ? (
-              <img src={logo} alt="QR Code" style={{ width: '100%', height: 'auto' }} />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <canvas
+                  ref={(canvas) => {
+                    if (canvas) {
+                      const context = canvas.getContext("2d");
+                      const image = new Image();
+                      image.src = logo;
+                      image.onload = () => {
+                        context.drawImage(image, 0, 0);
+                      };
+                    }
+                  }}
+                  style={{
+                    width: "300px", // Ajusta este valor para controlar el tamaño del código QR
+                    height: "200px", // Ajusta este valor para controlar el tamaño del código QR
+                    margin: "block", // Centra horizontalmente el elemento
+                    display: "block", // Elimina el espacio adicional debajo del canvas
+                  }}
+                />
+              </div>
             ) : (
-              <Typography variant="h5" align='center'>oly</Typography>
+              <Typography variant="h5" align="center">
+                oly
+              </Typography>
             )}
           </Grid>
 
-          <Grid item xs={8} style={{ paddingLeft: '16px' }}>
+          <Grid item xs={8} style={{ paddingLeft: "16px" }}>
             {/* <Typography variant="h4">Crear Nuevo Accesorio</Typography> */}
             <form>
-
-              {renderTextField('Nombre:', 'nombre')}
-              {renderTextField('Marca:', 'marca')}
-              {renderTextField('Modelo:', 'modelo')}
-              {renderTextField('Fecha Trabajo:', 'fechatrabajo')}
-              {renderTextField('Precio:', 'precio')}
-              {renderTextField('Piezas:', 'piezas')}
-              {renderTextField('Modo de uso:', 'modouso')}
-              {renderImageField('Imagen:', 'imagen')}
-              {renderTextField('Mantenimiento:', 'mantenimiento')}
-              {renderTextField('Codeqr:', 'codeqr')}
-            
+              {renderTextField("Nombre:", "nombre", handleNameChange)}
+              {renderTextField("Marca:", "marca", handleBrandChange)}
+              {renderTextField("Modelo:", "modelo", handleModelChange)}
+              {renderTextField("Fecha Trabajo:", "fechatrabajo")}
+              {renderTextField("Precio:", "precio", handlePriceChange)}
+              {renderTextField("Piezas:", "piezas", handlePartsChange)}
+              {renderTextField(
+                "Modo de uso:",
+                "modouso",
+                handleInductionChange
+              )}
+              {renderImageField("Imagen:", "imagen", handleImageChange)}
+              {renderTextField("Mantenimiento:", "mantenimiento")}
+              {renderTextField("Codeqr:", "codeqr")}
             </form>
-          
-         
           </Grid>
-        </Grid >
-        <Button variant="contained" onClick={handleCreateAccessory}style={{ marginTop: '20px' }}>
-              Crear 
+        </Grid>
+
+        <Button
+          variant="contained"
+          onClick={handleCreateAccessory}
+          style={{ marginTop: "20px" }}
+        >
+          Crear
         </Button>
       </LocalizationProvider>
     </Container>
