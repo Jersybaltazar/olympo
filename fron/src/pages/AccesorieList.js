@@ -11,12 +11,13 @@
   import AccessoryCard from "../components/AccesoryCard"; // Crearemos este componente a continuación
   import { Link } from "react-router-dom";
   import { styled } from "@mui/system";
+  import { isAfter, addDays } from 'date-fns';
 
   const RightAlignedContainer = styled(Container)({
     display: "flex",
     justifyContent: "flex-end",
     marginBottom: "36px",
-    marginTop: "30px",
+    marginTop: "30px",  
   });
 
   const AccessoryList = () => {
@@ -30,7 +31,10 @@
     const handleSearchClick = () => {
       setShowSearchField(!showSearchField);
     };
+
+
     const searchRef = useRef(null);
+
     useEffect(() => {
       const handleOutsideClick = (event) => {
         if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -44,12 +48,28 @@
       };
     }, []);
 
+
+    const currentDate = new Date();
+    const calculateNextMaintenanceDate  =  (purchaseDate, maintenanceInterval)=>{
+      return addDays(purchaseDate,maintenanceInterval)
+    };
+
+    const determineMaintenanceStatus = (accessory) => {
+      const nextMaintenanceDate = calculateNextMaintenanceDate(
+        new Date(accessory.purchase_date),
+        parseInt(accessory.mantenimiento)
+      );
+  
+      return isAfter(currentDate, nextMaintenanceDate) ? 'Pendiente' : 'Realizado';
+    };
+
+
     useEffect(() => {
       // Hacer la solicitud GET al endpoint para obtener la lista de accesorios
       fetch("http://localhost:3001/accesories/all")
         .then((response) => response.json())
         .then((data) => {
-          // Aquí debes convertir el Blob de la imagen en una URL para el accesorio
+     
           const accesoriesWithImagesUrl = data.map((accessory) => {
             if (accessory.img) {
               const imageUrl = `data:image/jpeg;base64,${accessory.img}`;
@@ -73,6 +93,7 @@
     
         if (response.ok) {
           // Realiza cualquier acción adicional después de eliminar (por ejemplo, recargar la lista)
+          setAccessoryList((prevList) => prevList.filter((accessory) => accessory.id_accesorie !== id));
         } else {
           console.error('Error al eliminar el accesorio');
         }
@@ -81,6 +102,11 @@
       }
     };
 
+    const handleEditClick = (id) => {
+      // Lógica para manejar la edición del accesorio con el ID proporcionado
+      // Puedes abrir el modal de edición aquí o realizar otras acciones necesarias
+    };
+    
     const filteredAccessories = accessoryList.filter((accessory) =>
       accessory.name && accessory.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -100,6 +126,13 @@
       startIndex,
       startIndex + itemsPerPage
     );
+
+    const CenteredContainer = styled(Container)({
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      marginTop: "30px",
+    });
 
     return (
       <Container maxWidth="lg" fixed={true}>
@@ -138,7 +171,8 @@
             </Grid>
           </Grid>
         </div>
-
+        
+        <CenteredContainer>
         <Grid container spacing={8}>
           {displayedAccessories.map((accessory) => (
             <Grid item xs={4} key={accessory.id}>
@@ -146,11 +180,14 @@
                 key={accessory.id}
                 accessory={accessory}
                 onDelete={handleDeleteClick}
+                maintenanceStatus={determineMaintenanceStatus(accessory)}
+                onEdit={handleEditClick} 
                 // onUpdate={handleUpdateClick}
               />
             </Grid>
           ))}
         </Grid>
+        </CenteredContainer>
         <div>
           {Array.from({ length: totalPages }).map((_, index) => (
             <Button key={index} onClick={() => handlePageChange(index + 1)}>

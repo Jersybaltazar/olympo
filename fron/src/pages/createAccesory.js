@@ -94,6 +94,11 @@ const CreateAccessory = () => {
 
       setLogoImage(qrDataURL);
       setCode_QR(uniqueValue);
+      
+      const link = document.createElement("a");
+      link.href = qrDataURL;
+      link.download = "codigo_qr.png";
+      link.click();
 
       const response = await fetch("http://localhost:3001/codeqr/save", {
         method: "POST",
@@ -121,19 +126,6 @@ const CreateAccessory = () => {
     try {
       const imageBase64 = selectedImage.split(",")[1];
 
-      console.log("Values to be sent:", {
-        name,
-        brand,
-        model,
-        price,
-        parts,
-        induction,
-        selectedMaintenance,
-        imageBase64,
-        purchase_date: selectedDate,
-        createdQrId,
-      });
-
       const response = await fetch("http://localhost:3001/accesories", {
         method: "POST",
         headers: {
@@ -156,6 +148,18 @@ const CreateAccessory = () => {
 
       if (response.ok) {
         // Accesorio creado exitosamente en el backend
+        setName("");
+        setBrand("");
+        setModel("");
+        setPrice("");
+        setParts("");
+        setInduction("");
+        setSelectedMaintenance(1);
+        setSelectedImage(null);
+        setSelectedDate(null);
+        setLogoImage(null);
+        setCode_QR("");
+        setCreatedQrId(null);
       } else {
         console.error("Error al crear el accesorio en el backend");
       }
@@ -301,13 +305,12 @@ const CreateAccessory = () => {
             item
             xs={4}
             style={{
-              backgroundColor: "#f0f0f0",
+              backgroundColor: "#ffff",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            {/* Aquí podrías mostrar el logo o QR generado */}
             {logo ? (
               <div
                 style={{
@@ -325,7 +328,7 @@ const CreateAccessory = () => {
                       const image = new Image();
                       image.src = logo;
                       image.onload = () => {
-                        context.drawImage(image, 0, 0);
+                      context.drawImage(image, 0, 0);
                       };
                     }
                   }}
@@ -339,13 +342,12 @@ const CreateAccessory = () => {
               </div>
             ) : (
               <Typography variant="h5" align="center">
-                oly
+                olympo
               </Typography>
             )}
           </Grid>
 
-          <Grid item xs={8} style={{ paddingLeft: "16px" }}>
-            {/* <Typography variant="h4">Crear Nuevo Accesorio</Typography> */}
+          <Grid item xs={8} style={{ paddingLeft: "20px" }}>
             <form>
               {renderTextField("Nombre:", "nombre", handleNameChange)}
               {renderTextField("Marca:", "marca", handleBrandChange)}
@@ -363,15 +365,27 @@ const CreateAccessory = () => {
               {renderTextField("Codeqr:", "codeqr")}
             </form>
           </Grid>
-        </Grid>
+       
 
-        <Button
-          variant="contained"
-          onClick={handleCreateAccessory}
-          style={{ marginTop: "20px" }}
+        <Grid
+          item
+          xs={8}
+          style={{
+            paddingLeft: "16px",
+            display: "flex",
+            justifyContent: "flex-end", // Alineación a la derecha
+            marginTop: "20px",
+          }}
         >
-          Crear
-        </Button>
+          <Button
+            variant="contained"
+            onClick={handleCreateAccessory}
+            style={{ marginTop: "20px" }}
+          >
+            Crear
+          </Button>
+        </Grid>
+        </Grid>
       </LocalizationProvider>
     </Container>
   );

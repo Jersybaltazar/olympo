@@ -26,8 +26,7 @@ const User = sequelize.define('user',{
         },  
     },
     email:{
-        type : DataTypes.TEXT,
-        unique: true,
+        type :DataTypes.TEXT,
         allowNull: false,
         validate:{
             len:[1,250]

@@ -5,8 +5,9 @@ import AccessoryList from "./pages/AccesorieList";
 import UserList from "./pages/UserList"
 import CreateAccessory from "./pages/createAccesory";
 import SignIn from './components/auth/SignUp';
-import LogIn from './components/auth/LogIn'
-
+import LogIn from './components/auth/LogIn';
+import CreateUser from './pages/createUser';
+import DetailsAccessory from './pages/detailsAccesory'
 function App() {
   const isLoggedIn  = true;
 
@@ -23,9 +24,11 @@ function App() {
         <Route path="/accessory" element={<AccessoryList/>}/>
         <Route path="/user" element={<UserList/>}/>
         <Route path="/create-accesory" element={<CreateAccessory/>}/>
+        <Route path="/create-user" element={<CreateUser/>}/>
+        <Route path="/details" element={<DetailsAccessory/>}/>
         </>
       ):(
-        <Navigate to="/login" />
+        <Navigate to="/login" /> 
       )}
 
    

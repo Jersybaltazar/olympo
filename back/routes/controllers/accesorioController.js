@@ -2,6 +2,8 @@ const qr = require("qrcode");
 const QRCode = require("../../models/codeqr");
 const Accesorie = require("../../models/accesorie");
 const { Buffer } = require('buffer'); 
+
+
 const createAccesorieWithQR = async (req, res) => {
   try {
     const {
