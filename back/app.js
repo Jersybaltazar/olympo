@@ -21,7 +21,6 @@ const codeQRRoutes = require('./routes/qrRoutes');
 const permissionRoutes = require('./routes/permissionRoutes');
 
 app.use('/users', userRoutes);
-
 app.use('/accesories', accesorieRoutes);
 app.use('/codeqr', codeQRRoutes);
 app.use('/permissions', permissionRoutes);

@@ -5,9 +5,13 @@ const CodeQR = require('./codeqr');
 
 const Accesorie = sequelize.define('accesorie',{
     id_accesorie:{
-        type: DataTypes.INTEGER,
-        primaryKey:true,
-        autoIncrement:true,
+        type: DataTypes.STRING(250),
+        primaryKey: true,
+        allowNull: false,
+        references:{
+            model:'codeqr',
+            key:'code',
+        },
     },
     name:{
         type: DataTypes.STRING(250),
@@ -45,14 +49,7 @@ const Accesorie = sequelize.define('accesorie',{
         type: DataTypes.DATEONLY,
         allowNull: false,
     },
-    code_QR: {
-        type: DataTypes.INTEGER, 
-        allowNull: false,
-        references:{
-            model:'codeqr',
-            key:'id_qr',
-        },
-    },
+ 
 },{
     freezeTableName:true,
     timestamps: false,

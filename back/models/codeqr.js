@@ -1,29 +1,27 @@
-const { DataTypes }  = require('sequelize');
-const sequelize  = require('../config/sequelize');
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/sequelize");
 
-const CodeQR = sequelize.define('codeqr',{
-    id_qr:{
-        type: DataTypes.INTEGER,
-        primaryKey:true,
-        autoIncrement: true,
+const CodeQR = sequelize.define(
+  "codeqr",
+  {
+    code: {
+      type: DataTypes.STRING(250),
+      allowNull: false,
+      unique:true,
     },
-    code:{
-        type: DataTypes.TEXT,
-        allowNull:false,
-    },
-    
-
-},{
+  },
+  {
     freezeTableName: true,
     timestamps: false,
-});
+  }
+);
 
 CodeQR.sync()
-    .then(()=>{
-        console.log('Modelo de datos "codeqr" sincronizado correctamente.' );
-    })
-    .catch((err)=>{
-        console.log('Error al sincornizar el modelo de datos "codeqr"', err);
-    });
-    
-module.exports =  CodeQR;
+  .then(() => {
+    console.log('Modelo de datos "codeqr" sincronizado correctamente.');
+  })
+  .catch((err) => {
+    console.log('Error al sincornizar el modelo de datos "codeqr"', err);
+  });
+
+module.exports = CodeQR;

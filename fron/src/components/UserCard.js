@@ -13,13 +13,13 @@ import {
 } from "@mui/material";
 
 const UserCard = ({ user, onDelete, onEdit }) => {
-  const { id, name, lastName, permission, email } = user;
+  const { id_users, name, lastName, permission, email } = user;
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedField, setSelectedField] = useState("");
 
   const handleDeleteClick = () => {
-    onDelete(id);
+    onDelete(id_users);
   };
 
   const handleEditClick = () => {

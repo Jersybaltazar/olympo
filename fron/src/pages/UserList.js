@@ -141,7 +141,10 @@ const UserList = () => {
       <div>
         {/* Map para renderizar las tarjetas de usuario */}
         {displayedUsers.map((user) => (
-          <UserCard key={user.id} user={user} />
+          <UserCard 
+          
+          onClick = {handleDeleteUser}
+          key={user.id} user={user} />
         ))}
       </div>
 

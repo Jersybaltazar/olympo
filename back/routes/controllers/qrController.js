@@ -1,4 +1,5 @@
 const qr = require("qrcode");
+const { Op } = require('sequelize');
 const QRCode = require("../../models/codeqr");
 const Accesorie = require("../../models/accesorie"); // Asegúrate de importar el modelo QRCode correctamente
 
@@ -12,15 +13,12 @@ exports.saveEncryptedCode = async (req, res) => {
     if (!req.body || typeof req.body !== 'object') {
         return res.status(400).json({ message: 'Cuerpo de solicitud inválido' });
     }
-
-
     // Verificar que el objeto JSON tenga la propiedad 'code'
     if (!req.body.code) {
         return res.status(400).json({ message: 'La propiedad "code" es requerida en el cuerpo de la solicitud' });
       }
 
     const {code}   = req.body; // Obtén el valor del código QR del cuerpo de la solicitud
-    // Genera la imagen del código QR
 
     const createdQR = await QRCode.create({
         code,      
@@ -28,7 +26,7 @@ exports.saveEncryptedCode = async (req, res) => {
 
     res.status(201).json({
       message: "Código QR guardado exitosamente.",
-      id_qr: createdQR.id_qr,
+      code: createdQR.code,
     });
   } catch (error) {
     console.error("Error al guardar el código QR:", error);
@@ -36,24 +34,59 @@ exports.saveEncryptedCode = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
-
-exports.saveCodeQR = async (req, res) => {
+exports.  getAccessoryDetailsFromQR = async (req, res) => {
   try {
-    // Generar un valor único para el código QR (puede ser un número, cadena, etc.)
-    const uniqueValue = generateUniqueValue(); // Implementa esta función
-    const qrCodeImage = await QRCode.toDataURL(uniqueValue);
-    // Guardar el valor único en la tabla CodeQR
-    const newCodeQR = await CodeQR.create({ code: uniqueValue });
 
-    return newCodeQR.id_qr; // Devolver el ID del código QR creado
+      // El identificador único (ID) del accesorio
+    const { id } = req.params;
+
+    const accessory = await Accesorie.findOne({
+      where: {
+        id_accesorie:id,
+      },
+      attributes: [
+        "id_accesorie",
+        "name",
+        "brand",
+        "model",
+        "price",
+        "parts",
+        "induction",
+        "mantenimiento",
+        "img",
+        "purchase_date",
+      ],
+    });
+
+    if (!accessory) {
+      return res.status(404).json({ message: 'Accesorio no encontrado' });
+    }
+
+      return res.status(200).json(accessory);
+    // res.render('qr-details', { accessory });
   } catch (error) {
-    console.error("Error al crear el código QR:", error);
-    return null;
+    console.error('Error al obtener detalles del accesorio', error);
+    return res.status(500).json({ message: 'Error interno del servidsor' });
+  }
+};
+
+exports.updateQRCodeURL = async (id_qr, newUrl) => {
+  try {
+    // Buscar el QRCode por su ID
+    const qrCodeToUpdate = await QRCode.findByPk(id_qr);
+
+    if (!qrCodeToUpdate) {
+      console.error("QRCode no encontrado");
+      return;
+    }
+
+    // Actualizar la URL en el QRCode
+    await qrCodeToUpdate.update({
+      code: newUrl,
+    });
+
+    console.log("URL del QRCode actualizada exitosamente");
+  } catch (error) {
+    console.error("Error al actualizar la URL del QRCode:", error);
   }
 };

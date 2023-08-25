@@ -22,9 +22,10 @@ const createAccesorieWithQR = async (req, res) => {
     // Buscar el código QR correspondiente en la tabla CodeQR
     const decodedImage = Buffer.from(img, "base64");
     console.log(decodedImage);
+    
     const foundCodeQR = await QRCode.findOne({
       where: {
-        id_qr: createdQrId,
+        code: createdQrId,
       },
     });
 
@@ -34,6 +35,7 @@ const createAccesorieWithQR = async (req, res) => {
 
     // Crear el accesorio y asociarlo con el código QR
     const newAccesorie = await Accesorie.create({
+      id_accesorie: createdQrId,
       name,
       brand,
       model,
@@ -43,7 +45,6 @@ const createAccesorieWithQR = async (req, res) => {
       mantenimiento,
       img: decodedImage,
       purchase_date,
-      code_QR: foundCodeQR.id_qr,
     });
 
     return res.status(201).json(newAccesorie);
@@ -54,6 +55,8 @@ const createAccesorieWithQR = async (req, res) => {
       .json({ message: "Error interno del servidor", error });
   }
 };
+
+
 
 const getAllAccesories = async (req, res) => {
   try {
@@ -69,7 +72,7 @@ const getAllAccesories = async (req, res) => {
             "mantenimiento",
             "img",
             "purchase_date",
-            "code_QR",
+   
         ],
     });
 

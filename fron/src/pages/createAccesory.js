@@ -83,22 +83,25 @@ const CreateAccessory = () => {
 
   const handleGenerateQR = async () => {
     try {
-      // Genera el código encriptado aquí (debe ser una cadena única generada por el código QR)
-      const uniqueValue = generateUniqueValue(); // Cambia esto con el código encriptado real
+      const baseUrl = "http://localhost:3000/details/";
+      const uniqueValue = generateUniqueValue();
+      const qrUrl = baseUrl + uniqueValue;
 
-      const canvas = await QRCode.toCanvas(uniqueValue, {
+      // const qrUrl  = `http://localhost:3000/details/${uniqueValue}`;
+
+      const canvas = await QRCode.toCanvas(qrUrl, {
         width: parseInt(qrSize),
         height: parseInt(qrSize),
       });
       const qrDataURL = canvas.toDataURL("image/png");
 
       setLogoImage(qrDataURL);
-      setCode_QR(uniqueValue);
-      
+
       const link = document.createElement("a");
       link.href = qrDataURL;
       link.download = "codigo_qr.png";
       link.click();
+      
 
       const response = await fetch("http://localhost:3001/codeqr/save", {
         method: "POST",
@@ -106,17 +109,17 @@ const CreateAccessory = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          code: qrDataURL,
+          code: uniqueValue,
         }),
       });
 
       if (response.ok) {
         const responseData = await response.json();
-        const createdQrId = responseData.id_qr;
+        const createdQrId = responseData.code;
         setCreatedQrId(createdQrId);
-      } else {
-        console.error("Error guardando el código QR en el backend");
-      }
+        } else {
+          console.error("Error guardando el código QR en el backend");
+        }
     } catch (error) {
       console.error("Error generando el código QR", error);
     }
@@ -328,7 +331,7 @@ const CreateAccessory = () => {
                       const image = new Image();
                       image.src = logo;
                       image.onload = () => {
-                      context.drawImage(image, 0, 0);
+                        context.drawImage(image, 0, 0);
                       };
                     }
                   }}
@@ -365,26 +368,25 @@ const CreateAccessory = () => {
               {renderTextField("Codeqr:", "codeqr")}
             </form>
           </Grid>
-       
 
-        <Grid
-          item
-          xs={8}
-          style={{
-            paddingLeft: "16px",
-            display: "flex",
-            justifyContent: "flex-end", // Alineación a la derecha
-            marginTop: "20px",
-          }}
-        >
-          <Button
-            variant="contained"
-            onClick={handleCreateAccessory}
-            style={{ marginTop: "20px" }}
+          <Grid
+            item
+            xs={8}
+            style={{
+              paddingLeft: "16px",
+              display: "flex",
+              justifyContent: "flex-end", // Alineación a la derecha
+              marginTop: "20px",
+            }}
           >
-            Crear
-          </Button>
-        </Grid>
+            <Button
+              variant="contained"
+              onClick={handleCreateAccessory}
+              style={{ marginTop: "20px" }}
+            >
+              Crear
+            </Button>
+          </Grid>
         </Grid>
       </LocalizationProvider>
     </Container>

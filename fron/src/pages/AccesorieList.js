@@ -54,7 +54,7 @@
       return addDays(purchaseDate,maintenanceInterval)
     };
 
-    const determineMaintenanceStatus = (accessory) => {
+  exports.determineMaintenanceStatus = (accessory) => {
       const nextMaintenanceDate = calculateNextMaintenanceDate(
         new Date(accessory.purchase_date),
         parseInt(accessory.mantenimiento)

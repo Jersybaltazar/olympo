@@ -1,52 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { Container, Typography, Grid } from "@mui/material";
-import { useParams } from "react-router-dom";
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+import AccessoryDetailsFromQR from './AccessoryDetailsFromQR'; // Ajusta la ruta según la ubicación de tu componente
 
-const AccessoryDetails = () => {
-  const { codeQR } = useParams();
-  const [accessory, setAccessory] = useState(null);
+const DetailsAccessory = () => {
+  const location = useLocation();
+  const qrImageUrl = location.search.slice(1); // Eliminar el signo de interrogación (?)
 
-  useEffect(() => {
-    // Hacer la solicitud GET al endpoint para obtener los detalles del accesorio
-    fetch(`http://localhost:3001/accesories/byqrcode/${codeQR}`)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data) {
-          if (data.img) {
-            const imageUrl = `data:image/jpeg;base64,${data.img}`;
-            setAccessory({ ...data, img: imageUrl });
-          } else {
-            setAccessory(data);
-          }
-        }
-      })
-      .catch((error) => console.error("Error obteniendo los detalles del accesorio:", error));
-  }, [codeQR]);
-
-  if (!accessory) {
-    return (
-      <Container maxWidth="lg">
-        <Typography variant="h4">Cargando...</Typography>
-      </Container>
-    );
-  }
-
-  return (
-    <Container maxWidth="lg">
-      <Typography variant="h4">Detalles del Accesorio</Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <img src={accessory.img} alt="Accessory" style={{ maxWidth: "100%" }} />
-        </Grid>
-        <Grid item xs={6}>
-          <Typography variant="h6">Nombre: {accessory.name}</Typography>
-          <Typography>Marca: {accessory.brand}</Typography>
-          <Typography>Modelo: {accessory.model}</Typography>
-          {/* Agrega más detalles aquí */}
-        </Grid>
-      </Grid>
-    </Container>
-  );
+  return <AccessoryDetailsFromQR qrImageUrl={qrImageUrl} />;
 };
 
-export default AccessoryDetails;
+export default DetailsAccessory;
